@@ -1,0 +1,616 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Personal Career Dashboard</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css" />
+  </head>
+  <body class="bg-slate-50/70 text-slate-900 select-none antialiased">
+
+    <!-- GLOBAL TOAST CONTAINER -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- MAIN APP WRAPPER -->
+    <div class="min-h-screen flex flex-col relative">
+
+      <!-- TOP FIXED NAVBAR -->
+      <nav class="fixed top-0 left-0 right-0 h-16 bg-white border-b border-slate-200 z-50 flex items-center justify-between px-4 lg:px-6 shadow-xs">
+        <div class="flex items-center space-x-3.5">
+          <!-- Mobile Sidebar Toggle -->
+          <button id="mobile-menu-toggle" class="lg:hidden p-2 rounded-lg hover:bg-slate-100 text-slate-500 transition-colors cursor-pointer" title="Toggle Menu">
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+          
+          <div class="flex items-center space-x-2.5">
+            <div class="p-2 bg-gradient-to-tr from-blue-600 to-indigo-600 rounded-lg text-white shadow-md shadow-blue-500/10">
+              <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <span class="font-sans font-extrabold text-lg lg:text-xl tracking-tight text-slate-900">CareerPilot</span>
+          </div>
+        </div>
+
+        <div class="flex items-center space-x-4">
+          <!-- API Synchronization warning widget -->
+          <div id="api-status-accent"></div>
+          
+          <div class="flex items-center space-x-2 border-l border-slate-200 pl-4">
+            <div class="h-8 w-8 rounded-full bg-gradient-to-tr from-blue-500 to-indigo-500 flex items-center justify-center text-white font-bold text-sm tracking-tight shadow-md shadow-indigo-500/10">
+              AM
+            </div>
+            <div class="hidden md:block text-left">
+              <span class="block text-xs font-bold text-slate-800 leading-tight profile-user-name">Alex Morgan</span>
+              <span class="block text-[10px] text-slate-400 font-mono tracking-tight leading-none profile-user-email">alex.morgan@career.com</span>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      <!-- SIDEBAR & CONTENT CONTAINER -->
+      <div class="flex flex-1 pt-16 h-full min-h-[calc(100vh-64px)] relative">
+
+        <!-- DESKTOP / MOBILE SIDEBAR -->
+        <aside id="desktop-sidebar" class="sidebar-transition fixed top-16 bottom-0 left-0 w-64 bg-white border-r border-slate-200/80 z-40 transform -translate-x-full lg:translate-x-0 flex flex-col justify-between p-4 lg:p-5">
+          <div class="space-y-6">
+            <div class="space-y-1">
+              <p class="text-[10px] font-bold text-slate-400 tracking-widest uppercase px-3 mb-2.5">Workspace</p>
+              
+              <a href="#" data-target-page="dashboard" class="flex items-center space-x-3 px-3 py-2.5 text-sm font-medium text-slate-600 rounded-lg hover:bg-slate-50 hover:text-slate-900 transition-all nav-link-active group">
+                <svg class="h-4 w-4 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2H6a2 2 0 01-2-2v-4zM14 16a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 01-2-2v-4z" />
+                </svg>
+                <span>Dashboard</span>
+              </a>
+
+              <a href="#" data-target-page="jobs" class="flex items-center space-x-3 px-3 py-2.5 text-sm font-medium text-slate-600 rounded-lg hover:bg-slate-50 hover:text-slate-900 transition-all group">
+                <svg class="h-4 w-4 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                <span>Job Applications</span>
+              </a>
+
+              <a href="#" data-target-page="habits" class="flex items-center space-x-3 px-3 py-2.5 text-sm font-medium text-slate-600 rounded-lg hover:bg-slate-50 hover:text-slate-900 transition-all group">
+                <svg class="h-4 w-4 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>Habits Tracker</span>
+              </a>
+
+              <a href="#" data-target-page="todo" class="flex items-center space-x-3 px-3 py-2.5 text-sm font-medium text-slate-600 rounded-lg hover:bg-slate-50 hover:text-slate-900 transition-all group">
+                <svg class="h-4 w-4 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                </svg>
+                <span>To Do Tasklist</span>
+              </a>
+
+              <a href="#" data-target-page="settings" class="flex items-center space-x-3 px-3 py-2.5 text-sm font-medium text-slate-600 rounded-lg hover:bg-slate-50 hover:text-slate-900 transition-all group">
+                <svg class="h-4 w-4 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                <span>Settings Hub</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Bottom profile status card inside sidebar -->
+          <div class="p-3 bg-slate-50 border border-slate-100 rounded-xl space-y-2">
+            <div class="flex items-center space-x-2.5">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
+              <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Active session</span>
+            </div>
+            <p class="text-[11px] text-slate-400 leading-tight">Syncing application states continuously across devices.</p>
+          </div>
+        </aside>
+
+        <!-- MAIN LAYOUT DISPLAY VIEWPORT -->
+        <main class="flex-1 lg:pl-64 p-4 lg:p-8 overflow-y-auto max-w-7xl mx-auto w-full">
+
+          <!-- PAGE 1: GENERAL DASHBOARD -->
+          <section id="page-dashboard" class="app-page-section space-y-6">
+            <div class="space-y-1">
+              <h1 class="text-xl lg:text-2xl font-black text-slate-900 tracking-tight">Active Command Center</h1>
+              <p class="text-xs text-slate-500 font-medium">Visualizing career leads, streaks, and upcoming events.</p>
+            </div>
+
+            <!-- STATISTIC METRIC CARDS -->
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-3.5">
+              <!-- Card: Total Applications -->
+              <div class="bg-white p-4 lg:p-5 rounded-xl border border-slate-200/80 shadow-xs hover:shadow-md transition-all">
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Total leads</p>
+                <div class="flex items-baseline space-x-2 mt-1">
+                  <span id="stat-total" class="text-2xl lg:text-3xl font-black text-slate-800 tracking-tight">-</span>
+                  <span class="text-[10px] text-blue-600 bg-blue-50 px-1.5 py-0.5 rounded font-bold">Applied</span>
+                </div>
+              </div>
+              <!-- Card: Under Review -->
+              <div class="bg-white p-4 lg:p-5 rounded-xl border border-slate-200/80 shadow-xs hover:shadow-md transition-all">
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Under Review</p>
+                <div class="flex items-baseline space-x-2 mt-1">
+                  <span id="stat-review" class="text-2xl lg:text-3xl font-black text-slate-800 tracking-tight">-</span>
+                  <span class="text-[10px] text-amber-600 bg-amber-50 px-1.5 py-0.5 rounded font-bold">Review</span>
+                </div>
+              </div>
+              <!-- Card: Interviews -->
+              <div class="bg-white p-4 lg:p-5 rounded-xl border border-slate-200/80 shadow-xs hover:shadow-md transition-all">
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Interviews</p>
+                <div class="flex items-baseline space-x-2 mt-1">
+                  <span id="stat-interviews" class="text-2xl lg:text-3xl font-black text-slate-800 tracking-tight">-</span>
+                  <span class="text-[10px] text-purple-600 bg-purple-50 px-1.5 py-0.5 rounded font-bold">Talks</span>
+                </div>
+              </div>
+              <!-- Card: Rejections -->
+              <div class="bg-white p-4 lg:p-5 rounded-xl border border-slate-200/80 shadow-xs hover:shadow-md transition-all">
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Rejections</p>
+                <div class="flex items-baseline space-x-2 mt-1">
+                  <span id="stat-rejections" class="text-2xl lg:text-3xl font-black text-slate-800 tracking-tight">-</span>
+                  <span class="text-[10px] text-red-600 bg-red-50 px-1.5 py-0.5 rounded font-bold">Erase</span>
+                </div>
+              </div>
+              <!-- Card: Offers -->
+              <div class="bg-white p-4 lg:p-5 rounded-xl border border-slate-200/80 shadow-xs hover:shadow-md transition-all col-span-2 md:col-span-1 border-emerald-100 bg-gradient-to-tr from-emerald-50/20 to-white">
+                <p class="text-[10px] font-bold text-emerald-600 uppercase tracking-widest">Offers Received</p>
+                <div class="flex items-baseline space-x-2 mt-1">
+                  <span id="stat-offers" class="text-3xl lg:text-4xl font-extrabold text-emerald-600 tracking-tight">-</span>
+                  <span class="text-[10px] text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded font-bold">Wins</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- TWO COLUMN GENERAL LAYOUT GRID -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+              <!-- Today's Habits Progress Widget -->
+              <div class="bg-white p-5 rounded-xl border border-slate-200/80 shadow-xs space-y-4">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                  <div class="flex items-center space-x-2">
+                    <div class="p-1.5 bg-emerald-50 text-emerald-500 rounded-lg">
+                      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </div>
+                    <h3 class="text-sm font-bold text-slate-800">Habit Streaks Builder</h3>
+                  </div>
+                  <a href="#" data-target-page="habits" class="text-xs text-blue-600 hover:underline font-bold">Go to Habits</a>
+                </div>
+                <div id="widget-habits-body" class="space-y-3 max-h-[300px] overflow-y-auto pr-1">
+                  <!-- Dynamically Rendered -->
+                </div>
+              </div>
+
+              <!-- Pending Tasks Widget -->
+              <div class="bg-white p-5 rounded-xl border border-slate-200/80 shadow-xs space-y-4">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                  <div class="flex items-center space-x-2">
+                    <div class="p-1.5 bg-amber-50 text-amber-500 rounded-lg">
+                      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                      </svg>
+                    </div>
+                    <h3 class="text-sm font-bold text-slate-800">Pending Tasks Queue</h3>
+                  </div>
+                  <a href="#" data-target-page="todo" class="text-xs text-blue-600 hover:underline font-bold">Go to Tasklist</a>
+                </div>
+                <div id="widget-todos-body" class="space-y-3 max-h-[300px] overflow-y-auto pr-1">
+                  <!-- Dynamically Rendered -->
+                </div>
+              </div>
+
+              <!-- Upcoming Follow-Ups Widget -->
+              <div class="bg-white p-5 rounded-xl border border-slate-200/80 shadow-xs space-y-4">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                  <div class="flex items-center space-x-2">
+                    <div class="p-1.5 bg-blue-50 text-blue-500 rounded-lg">
+                      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                    </div>
+                    <h3 class="text-sm font-bold text-slate-800">Schedule & Follow-Ups</h3>
+                  </div>
+                  <a href="#" data-target-page="jobs" class="text-xs text-blue-600 hover:underline font-bold">Go to Spreasheet</a>
+                </div>
+                <div id="widget-followups-body" class="space-y-3 max-h-[300px] overflow-y-auto pr-1">
+                  <!-- Dynamically Rendered -->
+                </div>
+              </div>
+
+              <!-- Recent Application Updates Widget -->
+              <div class="bg-white p-5 rounded-xl border border-slate-200/80 shadow-xs space-y-4">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                  <div class="flex items-center space-x-2">
+                    <div class="p-1.5 bg-slate-50 text-slate-500 rounded-lg">
+                      <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 8H17" />
+                      </svg>
+                    </div>
+                    <h3 class="text-sm font-bold text-slate-800">Recent Applications Edits</h3>
+                  </div>
+                  <a href="#" data-target-page="jobs" class="text-xs text-blue-600 hover:underline font-bold">Review Matrix</a>
+                </div>
+                <div id="widget-recent-body" class="space-y-3 max-h-[300px] overflow-y-auto pr-1">
+                  <!-- Dynamically Rendered -->
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- PAGE 2: JOB APPLICATIONS SPREADSHEET MAIN TRACKER -->
+          <section id="page-jobs" class="app-page-section space-y-6 hidden">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <div class="space-y-1">
+                <h1 class="text-xl lg:text-2xl font-black text-slate-900 tracking-tight">Applications Matrix</h1>
+                <p class="text-xs text-slate-500 font-medium">Airtable & Google Sheets inspired inline productivity grid.</p>
+              </div>
+
+              <!-- Quick addition block for fast data inserts -->
+              <div class="w-full md:w-80">
+                <div class="relative">
+                  <input type="text" id="jobs-quick-add" placeholder="Type Company + Enter to Quick-Add..." 
+                         class="w-full pl-3 pr-10 py-1.5 border border-slate-200 bg-white/80 backdrop-blur-md rounded-lg text-xs outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all">
+                  <div class="absolute right-3 top-2 text-[10px] font-mono text-slate-400 select-none">⏎ Enter</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- CONTROLS & UTILITY TOOLBAR -->
+            <div class="bg-white p-4 rounded-xl border border-slate-200/80 shadow-xs flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
+              <!-- Search, Filter, Rows limits -->
+              <div class="flex flex-wrap items-center gap-3">
+                <div class="relative w-full sm:w-64">
+                  <input type="text" id="jobs-search" placeholder="Search across columns..." 
+                         class="w-full pl-8 pr-3 py-1.5 border border-slate-200 bg-white rounded-lg text-xs outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all">
+                  <svg class="h-4 w-4 text-slate-400 absolute left-2.5 top-2.2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                </div>
+
+                <div class="flex items-center space-x-2">
+                  <span class="text-xs font-semibold text-slate-500">Status:</span>
+                  <select id="jobs-filter-status" class="px-3 py-1.5 border border-slate-200 bg-white rounded-lg text-xs outline-none focus:ring-2 focus:ring-blue-500/10 focus:border-blue-500 cursor-pointer">
+                    <option value="all">All Statuses</option>
+                    <option value="Applied">Applied</option>
+                    <option value="Under Review">Under Review</option>
+                    <option value="Assessment">Assessment</option>
+                    <option value="Interview">Interview</option>
+                    <option value="Selected">Selected</option>
+                    <option value="Rejected">Rejected</option>
+                    <option value="No Response">No Response</option>
+                  </select>
+                </div>
+
+                <div class="flex items-center space-x-2">
+                  <span class="text-xs font-semibold text-slate-500">Rows:</span>
+                  <select id="jobs-rows-per-page" class="px-2 py-1.5 border border-slate-200 bg-white rounded-lg text-xs outline-none focus:ring-2 focus:ring-blue-500/10 cursor-pointer">
+                    <option value="10">10</option>
+                    <option value="25" selected>25</option>
+                    <option value="50">50</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Buttons and Actions -->
+              <div class="flex items-center gap-2">
+                <!-- Delete row button (reveals count when selected) -->
+                <button id="jobs-delete-selected" class="p-1 px-3 bg-red-50 hover:bg-red-100 border border-red-200 text-red-600 rounded-lg text-xs font-bold font-mono transition-all flex items-center space-x-2 cursor-pointer">
+                  <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                  <span id="selected-count">0 selected</span>
+                </button>
+
+                <button id="jobs-export-csv" class="p-1 px-3 bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-600 rounded-lg text-xs font-bold transition-all flex items-center space-x-2 cursor-pointer" title="Export Spreadsheet to CSV">
+                  <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  <span>Export</span>
+                </button>
+
+                <button id="jobs-add-row" class="p-1 py-1.5 px-4 bg-blue-600 hover:bg-blue-700 hover:scale-105 border border-blue-700 text-white shadow-md shadow-blue-500/10 rounded-lg text-xs font-bold transition-all flex items-center space-x-2 cursor-pointer">
+                  <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                  </svg>
+                  <span>Add Row</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- THE WEB SPREADSHEET CANVAS -->
+            <div class="spreadsheet-container shadow-md border border-slate-200">
+              <table class="spreadsheet-table font-sans">
+                <thead>
+                  <tr id="spreadsheet-header">
+                    <!-- Loaded dynamically -->
+                  </tr>
+                </thead>
+                <tbody id="spreadsheet-body" class="bg-white">
+                  <!-- Loaded dynamically -->
+                </tbody>
+              </table>
+            </div>
+
+            <!-- PAGINATION AND KEYS REFERENCE FOOTER -->
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-semibold text-slate-500 px-1.5">
+              <div class="flex items-center space-x-4">
+                <span id="jobs-page-info">Showing - to - of -</span>
+                <div class="flex items-center space-x-1.5">
+                  <button id="jobs-prev-page" class="p-1 border border-slate-200 rounded hover:bg-slate-50 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed">◀ Prev</button>
+                  <button id="jobs-next-page" class="p-1 border border-slate-200 rounded hover:bg-slate-50 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed">Next ▶</button>
+                </div>
+              </div>
+              <div class="flex flex-wrap items-center gap-3 bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200 text-[10px] font-mono select-none text-slate-500">
+                <span class="font-bold text-slate-700 uppercase">Navigation hotkeys</span>
+                <span>• Arrow Keys to select cells</span>
+                <span>• Tab / Enter to edit</span>
+                <span>• Esc to cancel</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- PAGE 3: HABITS TRACKER -->
+          <section id="page-habits" class="app-page-section space-y-6 hidden">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div class="space-y-1">
+                <h1 class="text-xl lg:text-2xl font-black text-slate-900 tracking-tight">Daily Streaks Builder</h1>
+                <p class="text-xs text-slate-500 font-medium">Formulate powerful daily behaviors to boost application volume.</p>
+              </div>
+
+              <!-- Quick Habit addition Form -->
+              <form id="habits-add-form" class="bg-white p-3 border border-slate-200 rounded-xl shadow-xs flex items-center space-x-2">
+                <input type="text" id="habits-new-name" placeholder="Practice Algorithms, Researched company..." 
+                       class="px-3 py-1.5 border border-slate-200 bg-white rounded-lg text-xs outline-none focus:ring-2 focus:ring-blue-500/10 focus:border-blue-500 min-w-[200px]" required>
+                <div class="flex items-center space-x-1 border border-slate-200 px-2 py-0.5 rounded-lg bg-slate-50">
+                  <span class="text-slate-400 font-mono text-[10px]">Goal:</span>
+                  <input type="number" id="habits-new-goal" value="1" min="1" max="99" 
+                         class="w-8 bg-transparent outline-none font-bold text-slate-800 text-center text-xs">
+                </div>
+                <button type="submit" class="p-1 px-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold transition-all cursor-pointer">
+                  + Add Habit
+                </button>
+              </form>
+            </div>
+
+            <!-- HABITS CONTAINER GRID -->
+            <div id="habits-grid" class="grid grid-cols-1 md:grid-cols-2 gap-5.5">
+              <!-- Rendered dynamically -->
+            </div>
+          </section>
+
+          <!-- PAGE 4: TASK To Do LIST -->
+          <section id="page-todo" class="app-page-section space-y-6 hidden">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <div class="space-y-1">
+                <h1 class="text-xl lg:text-2xl font-black text-slate-900 tracking-tight">Primary Todo Matrix</h1>
+                <p class="text-xs text-slate-500 font-medium">Keep check-off deadlines prioritized by drag and drop.</p>
+              </div>
+
+              <!-- General progress timeline -->
+              <div class="w-full md:w-80 bg-white p-3.5 border border-slate-200 rounded-xl shadow-xs space-y-2">
+                <div class="flex items-center justify-between text-xs">
+                  <span class="text-slate-400 font-bold uppercase tracking-wider">Campaign Completion</span>
+                  <span id="todos-progress-text" class="font-bold text-indigo-600 font-mono">0 of 0 tasks completed (0%)</span>
+                </div>
+                <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+                  <div id="todos-progress-bar" class="bg-indigo-600 h-full rounded-full transition-all duration-300" style="width: 0%"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- TASK QUICK ADD FORMS BAR -->
+            <form id="todo-add-form" class="bg-white p-4 rounded-xl border border-slate-200/80 shadow-xs flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+              <div class="flex-1 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                <div class="flex-1 relative">
+                  <input type="text" id="todo-new-text" placeholder="Finish review sheet, send follow-up note to recruiter..." 
+                         class="w-full pl-3 pr-3 py-1.5 border border-slate-200 bg-white rounded-lg text-xs outline-none focus:ring-2 focus:ring-blue-500/10 focus:border-blue-500 transition-all" required>
+                </div>
+                
+                <div class="flex items-center space-x-2">
+                  <span class="text-xs font-semibold text-slate-500">Priority:</span>
+                  <select id="todo-new-priority" class="px-3 py-1.5 border border-slate-200 bg-white rounded-lg text-xs outline-none cursor-pointer">
+                    <option value="High">🔴 High Priority</option>
+                    <option value="Medium" selected>🟡 Medium Priority</option>
+                    <option value="Low">🔵 Low Priority</option>
+                  </select>
+                </div>
+
+                <div class="flex items-center space-x-2">
+                  <span class="text-xs font-semibold text-slate-500">Due Date:</span>
+                  <input type="date" id="todo-new-date" class="px-2 py-1.5 border border-slate-200 bg-white rounded-lg text-xs outline-none font-mono">
+                </div>
+              </div>
+
+              <button type="submit" class="p-1 py-1.5 px-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-bold transition-all shadow-md shadow-indigo-500/10 flex items-center space-x-2 cursor-pointer">
+                <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                </svg>
+                <span>Add Task</span>
+              </button>
+            </form>
+
+            <!-- KANBAN TRIO DRAGGABLE COLUMNS -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <!-- High Priority -->
+              <div class="bg-red-50/20 p-4 rounded-xl border border-red-200/60 shadow-xs flex flex-col">
+                <div class="flex items-center justify-between mb-4 pb-2 border-b border-red-100">
+                  <div class="flex items-center space-x-2">
+                    <span class="inline-block w-2.5 h-2.5 rounded-full bg-red-400"></span>
+                    <h3 class="text-sm font-extrabold text-slate-800">High Priority List</h3>
+                  </div>
+                </div>
+                <div id="list-high-priority" class="task-list flex-1" data-priority="High">
+                  <!-- Generated -->
+                </div>
+              </div>
+
+              <!-- Medium Priority -->
+              <div class="bg-amber-50/20 p-4 rounded-xl border border-amber-200/60 shadow-xs flex flex-col">
+                <div class="flex items-center justify-between mb-4 pb-2 border-b border-amber-100">
+                  <div class="flex items-center space-x-2">
+                    <span class="inline-block w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+                    <h3 class="text-sm font-extrabold text-slate-800">Medium Priority List</h3>
+                  </div>
+                </div>
+                <div id="list-medium-priority" class="task-list flex-1" data-priority="Medium">
+                  <!-- Generated -->
+                </div>
+              </div>
+
+              <!-- Low Priority -->
+              <div class="bg-blue-50/20 p-4 rounded-xl border border-blue-200/60 shadow-xs flex flex-col">
+                <div class="flex items-center justify-between mb-4 pb-2 border-b border-blue-100">
+                  <div class="flex items-center space-x-2">
+                    <span class="inline-block w-2.5 h-2.5 rounded-full bg-blue-400"></span>
+                    <h3 class="text-sm font-extrabold text-slate-800">Low Priority List</h3>
+                  </div>
+                </div>
+                <div id="list-low-priority" class="task-list flex-1" data-priority="Low">
+                  <!-- Generated -->
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- PAGE 5: CONFIGURATION SETTINGS HUB -->
+          <section id="page-settings" class="app-page-section space-y-6 hidden">
+            <div class="space-y-1">
+              <h1 class="text-xl lg:text-2xl font-black text-slate-900 tracking-tight">Configuration Deck</h1>
+              <p class="text-xs text-slate-500 font-medium">Sync with Google Sheets or modify user preferences offline.</p>
+            </div>
+
+            <!-- SETTINGS CORE FORMS CARDS -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              
+              <!-- Left Form: User Profile & Schedules -->
+              <div class="bg-white p-5 lg:p-6 rounded-xl border border-slate-200/80 shadow-xs space-y-5">
+                <div class="flex items-center space-x-2 border-b border-slate-100 pb-3">
+                  <svg class="h-5 w-5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
+                  <h3 class="text-sm font-bold text-slate-800">Candidate Profile & Alerts</h3>
+                </div>
+
+                <form id="settings-form" class="space-y-4">
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label class="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5">Candidate Name</label>
+                      <input type="text" id="settings-name" class="w-full px-3 py-2 border border-slate-200 bg-white rounded-lg text-xs outline-none focus:ring-2 focus:ring-blue-500/10 focus:border-blue-500 font-semibold" required>
+                    </div>
+                    <div>
+                      <label class="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5">Notification Time</label>
+                      <input type="time" id="settings-reminder-time" class="w-full px-3 py-2 border border-slate-200 bg-white rounded-lg text-xs outline-none focus:ring-2 focus:ring-blue-500/10 focus:border-blue-500 font-mono" required>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1.5">Email Address</label>
+                    <input type="email" id="settings-email" class="w-full px-3 py-2 border border-slate-200 bg-white rounded-lg text-xs outline-none focus:ring-2 focus:ring-blue-500/10 focus:border-blue-500 font-semibold" required>
+                  </div>
+
+                  <div class="border-t border-slate-100 pt-4 space-y-3">
+                    <span class="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1">Active Reminders</span>
+                    
+                    <label class="flex items-center space-x-3 text-xs font-medium text-slate-700 cursor-pointer select-none">
+                      <input type="checkbox" id="settings-check-daily" class="rounded border-slate-300 accent-blue-600">
+                      <span>Daily Review Reminder</span>
+                    </label>
+
+                    <label class="flex items-center space-x-3 text-xs font-medium text-slate-700 cursor-pointer select-none">
+                      <input type="checkbox" id="settings-check-follow" class="rounded border-slate-300 accent-blue-600">
+                      <span>Weekly Job Follow-up Alerts</span>
+                    </label>
+
+                    <label class="flex items-center space-x-3 text-xs font-medium text-slate-700 cursor-pointer select-none">
+                      <input type="checkbox" id="settings-check-habit" class="rounded border-slate-300 accent-blue-600">
+                      <span>Daily Habits Completion Prompts</span>
+                    </label>
+                  </div>
+
+                  <button type="submit" class="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-bold transition-all shadow-md shadow-blue-500/10 cursor-pointer">
+                    Save Client Configurations
+                  </button>
+                </form>
+              </div>
+
+              <!-- Right Form: API Integrations hub with Google Apps Script documentation -->
+              <div class="bg-white p-5 lg:p-6 rounded-xl border border-slate-200/80 shadow-xs space-y-4">
+                <div class="flex items-center space-x-2 border-b border-slate-100 pb-3">
+                  <div class="p-1 px-1.5 bg-green-50 text-emerald-600 rounded">
+                    📊
+                  </div>
+                  <h3 class="text-sm font-bold text-slate-800">Google Sheets Connection Panel</h3>
+                </div>
+
+                <div class="space-y-4">
+                  <div class="p-3.5 bg-slate-50 border border-slate-200/50 rounded-lg text-xs text-slate-500 space-y-2 leading-relaxed">
+                    <span class="block font-bold text-slate-700 border-b border-slate-200 pb-1.5 mb-1.5">How-To Setup Sync Node:</span>
+                    <ol class="list-decimal pl-4 space-y-1.5 mb-3">
+                      <li>Open a new <strong>Google Sheet</strong> in your Google Drive.</li>
+                      <li>Rename three tabs: <span class="bg-white px-1.5 py-0.5 border border-slate-200 rounded font-mono font-bold font-xs">Applications</span>, <span class="bg-white px-1.5 py-0.5 border border-slate-200 rounded font-mono font-bold font-xs">Habits</span>, and <span class="bg-white px-1.5 py-0.5 border border-slate-200 rounded font-mono font-bold font-xs">Todos</span>.</li>
+                      <li>In sheets menu, select <strong>Extensions &gt; Apps Script</strong>.</li>
+                      <li>Paste the Web App source code. Click the Copy button below to load it to clipboard.</li>
+                      <li>Click <strong>Deploy &gt; New Deployment</strong>, choose Type: <strong>Web App</strong>, change Access: <strong>Anyone</strong>.</li>
+                      <li>Copy the generated <strong>Web App URL</strong> and paste it right below!</li>
+                    </ol>
+                    <button type="button" onclick="window.App.copyAppsScript()" class="w-full py-2 px-3 border border-indigo-200 text-indigo-600 hover:bg-slate-100/50 hover:border-indigo-300 font-bold rounded-lg text-[10px] tracking-wide uppercase transition-all flex items-center justify-center space-x-1.5 cursor-pointer">
+                      <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 5h4m-4 4h4m-11-4h.01M7 14h.01" />
+                      </svg>
+                      <span>Copy Web App Script Code</span>
+                    </button>
+                  </div>
+
+                  <div class="space-y-1.5 pt-1">
+                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wide">Google Apps Script Web App URL</label>
+                    <input type="text" id="settings-gas-url" placeholder="https://script.google.com/macros/s/.../exec" 
+                           class="w-full px-3 py-2 border border-slate-200 bg-white rounded-lg text-xs outline-none focus:ring-2 focus:ring-blue-500/10 focus:border-blue-500 font-mono">
+                  </div>
+
+                  <button id="btn-configure-api" class="w-full py-2.5 bg-slate-800 hover:bg-slate-900 text-white rounded-lg text-xs font-bold transition-all shadow-md shadow-slate-500/10 cursor-pointer">
+                    Secure Connect API Node
+                  </button>
+                </div>
+              </div>
+
+              <!-- Danger Zone Block: Database Maintenance & Clean Slate -->
+              <div class="bg-white p-5 lg:p-6 rounded-xl border border-red-200 shadow-xs space-y-4 md:col-span-2">
+                <div class="flex items-center space-x-2 border-b border-red-100 pb-3">
+                  <div class="p-1 px-1.5 bg-red-50 text-red-600 rounded">
+                    ⚠️
+                  </div>
+                  <h3 class="text-sm font-bold text-red-800">Danger Zone: Reset Workspace</h3>
+                </div>
+
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                  <div class="text-xs text-slate-500 leading-relaxed max-w-2xl">
+                    <span class="block font-bold text-slate-700 mb-1">Wipe All Sample / Seeding Data</span>
+                    This action will clear all current job applications, daily habits, and task lists. It prepares a completely clean workspace for you to track your own actual applications, and configures the tracking system so that sample data NEVER auto-repopulates when you refresh or reload the applet.
+                  </div>
+                  <button id="btn-clear-database" class="whitespace-nowrap px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg text-xs font-bold transition-all shadow-md shadow-red-500/10 cursor-pointer flex items-center justify-center space-x-1">
+                    <span>Wipe Sample Data & Start Fresh</span>
+                  </button>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+        </main>
+      </div>
+
+    </div>
+
+    <!-- CORE CHRONO LOGIC SCRIPTS -->
+    <script src="/js/config.js"></script>
+    <script src="/js/sheets.js"></script>
+    <script src="/js/jobs.js"></script>
+    <script src="/js/habits.js"></script>
+    <script src="/js/todos.js"></script>
+    <script src="/js/app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,6 @@
+{
+  "name": "Personal Career Dashboard",
+  "description": "A modern, spreadsheet-like productivity dashboard for managing job applications, habits, and tasks with Google Sheets integration.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
